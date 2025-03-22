@@ -1,0 +1,30 @@
+{% extends "pg/pg_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Tenant Dashboard Card -->
+      <div class="card mb-4">
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Tenant Dashboard</h6>
+          <!-- Add Tenant Button -->
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTenantModal">
+            Add Tenant
+          </button>
+        </div>
+        <!-- Add tenant list and Edit -->
+        <div class="card-body px-0 pt-0 pb-2">
+          {% include "pg/owner_tenant_list.html" %}
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- Add Tenant Modal -->
+  <div class="modal fade" id="addTenantModal" tabindex="-1" aria-labelledby="addTenantModalLabel" aria-hidden="true">
+    {% include "pg/owner_tenant_add.html" %}
+  </div>
+</div>
+{% endblock content %}

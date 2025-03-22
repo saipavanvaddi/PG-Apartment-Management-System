@@ -1,0 +1,58 @@
+
+<style>
+  thead th {
+    background-color: orange;
+    color: #000 !important; /* Absolute black */
+    font-weight: bold;
+  }
+  .badge-sm {
+        font-size: 0.7em;  /* adjust as needed */
+        padding: 0.25em 0.4em;
+    }
+</style>
+
+<div class="table-responsive p-0">
+  <table class="table align-items-center mb-0">
+    <thead>
+
+      <tr>
+        <th class="text-uppercase fs-6 fw-bold text-center">Room No</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Beds</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Status</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Rent</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Vacant</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Filled</th>
+        <th class="text-uppercase fs-6 fw-bold text-center">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for room in room_datas %}
+      <tr>
+        <td class="text-center">{{ room.room.room_number }}</td>
+        <td class="text-center">{{ room.room.number_of_beds }}</td>
+        <td class="text-center">
+          {% if room.room.status == 'available' %}
+            <span class="badge bg-success badge-sm">Available</span>
+          {% elif room.room.status == 'occupied' %}
+            <span class="badge bg-danger badge-sm">Occupied</span>
+          {% else %}
+            <span class="badge bg-warning badge-sm">{{ room.room.get_status_display }}</span>
+          {% endif %}
+        </td>
+        <td class="text-center">₹{{ room.room.rent_amount }}</td>
+        <td class="text-center">{{ room.vacant_beds }}</td>
+        <td class="text-center">{{ room.occupied_beds }}</td>
+        <td class="text-center">
+          <button class="btn p-0 border-0 bg-transparent me-3" data-bs-toggle="modal" data-bs-target="#editRoomModal{{ room.room.id }}">
+              <i class="fas fa-edit text-primary fs-5"></i>
+          </button>
+          <button class="btn p-0 border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteRoomModal{{ room.room.id }}">
+              <i class="fas fa-trash-alt text-danger fs-5"></i>
+          </button>
+      </td>          
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

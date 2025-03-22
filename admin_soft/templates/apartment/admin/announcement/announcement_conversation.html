@@ -1,0 +1,186 @@
+{% extends "apartment/admin/base/apartment_admin_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Announcement Conversation</h2>
+
+    <!-- Original Announcement -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">{{ announcement.title }}</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ announcement.message }}</p>
+            <small class="text-muted">Posted on: {{ announcement.created_at|date:"d M Y, H:i" }}</small>
+
+            <!-- Display Image if Available -->
+            {% if announcement.image_url %}
+            <div class="mt-3 text-center">
+                <div class="image-container" style="max-width: 600px; margin: 0 auto;">
+                    <img src="{{ announcement.image_url }}" alt="Announcement Image" class="img-fluid rounded" style="width: 100%; height: auto; max-height: 400px; object-fit: contain;">
+                    <div class="mt-2">
+                        <a href="{{ announcement.image_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-external-link-alt"></i> View Full Image
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Display File Attachment -->
+            {% if announcement.file_attachment_url %}
+            <p class="mt-3">
+                <a href="{{ announcement.file_attachment_url }}" download class="btn btn-link text-primary">
+                    <i class="fas fa-download"></i> Download Attachment
+                </a>
+            </p>
+            {% endif %}
+
+            <!-- Poll Section (Disable if Completed) -->
+            {% if announcement.poll_question %}
+            <div class="mt-3 border p-3 rounded">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-2">
+                        Poll: {{ announcement.poll_question.question }} 
+                        <span class="text-muted">({{ total_votes }} votes)</span>
+                    </h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="toggleVoters()">View Votes</button>
+                </div>
+
+                <form method="post" action="{% url 'admin_vote_poll' announcement.poll_question.id %}">
+                    {% csrf_token %}
+                    <ul class="list-group">
+                        {% for option in announcement.poll_question.options.all %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if announcement.is_completed %}
+                                        <input type="radio" name="poll_option" value="{{ option.id }}" disabled> 
+                                    {% else %}
+                                        <input type="radio" name="poll_option" value="{{ option.id }}" required>
+                                    {% endif %}
+                                    {{ option.option_text }}
+                                </div>
+                                <span class="badge bg-info">{{ option.vote_percentage|floatformat:2 }}%</span>
+                            </div>
+
+                            <!-- Voter List - Hidden by Default -->
+                            <div class="mt-2 voter-list" style="display: none;">
+                                <strong>Voters:</strong>
+                                <ul class="list-unstyled">
+                                    {% for vote in option.votes.all %}
+                                        {% for voter in vote.admin_voters.all %}
+                                            <li><i class="fas fa-user text-danger"></i> {{ voter.apartment_name }} (Admin)</li>
+                                        {% endfor %}
+                                        {% for voter in vote.owner_voters.all %}
+                                            <li><i class="fas fa-user text-primary"></i> {{ voter.owner_name }} (Owner)</li>
+                                        {% endfor %}
+                                    {% empty %}
+                                        <li class="text-muted">No votes yet</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="submit" class="btn btn-success mt-2" {% if announcement.is_completed %}disabled{% endif %}>Vote</button>
+                </form>
+            </div>
+
+            <script>
+                function toggleVoters() {
+                    let voterLists = document.querySelectorAll(".voter-list");
+                    voterLists.forEach(list => {
+                        list.style.display = (list.style.display === "none" || list.style.display === "") ? "block" : "none";
+                    });
+                }
+            </script>
+            {% endif %}
+
+            <!-- Meeting Schedule Section -->
+            {% if announcement.meeting_schedule %}
+            <div class="mt-3 border p-3 rounded">
+                <h5 class="mb-2">Scheduled Meeting</h5>
+                <p><strong>Title:</strong> {{ announcement.meeting_schedule.title }}</p>
+                <p><strong>Agenda:</strong> {{ announcement.meeting_schedule.agenda }}</p>
+                {% if announcement.meeting_schedule.description %}
+                <p><strong>Description:</strong> {{ announcement.meeting_schedule.description }}</p>
+                {% endif %}
+                <p><strong>Date:</strong> {{ announcement.meeting_schedule.date }}</p>
+                <p><strong>Time:</strong> {{ announcement.meeting_schedule.time }}</p>
+
+                <!-- Show Outcome if Meeting is Completed -->
+                {% if announcement.is_completed and announcement.meeting_schedule.final_outcome %}
+                <div class="alert alert-info mt-3">
+                    <h6>Meeting Outcome:</h6>
+                    <p>{{ announcement.meeting_schedule.final_outcome }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Replies Section (Disabled if Completed) -->
+    <h4 class="mb-3">Replies</h4>
+    <div class="list-group mb-4">
+        {% for reply in replies %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <strong>{{ reply.sender }}</strong>
+                </div>
+                <small class="text-muted">{{ reply.timestamp|date:"d M Y, H:i" }}</small>
+            </div>
+            <p class="mt-2">{{ reply.message }}</p>
+
+            <!-- Display Reply Image if Available -->
+            {% if reply.image_url %}
+            <div class="mt-3 text-center">
+                <div class="image-container" style="max-width: 500px; margin: 0 auto;">
+                    <img src="{{ reply.image_url }}" alt="Reply Image" class="img-fluid rounded" style="width: 100%; height: auto; max-height: 350px; object-fit: contain;">
+                    <div class="mt-2">
+                        <a href="{{ reply.image_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-external-link-alt"></i> View Full Image
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if reply.file_attachment_url %}
+            <p class="mt-3">
+                <a href="{{ reply.file_attachment_url }}" download class="btn btn-link text-primary">
+                    <i class="fas fa-download"></i> Download Attachment
+                </a>
+            </p>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p class="text-muted">No replies yet. Be the first to respond!</p>
+        {% endfor %}
+    </div>
+
+    <!-- Reply Form (Disabled if Completed) -->
+    {% if not announcement.is_completed %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <textarea name="message" class="form-control" rows="3" placeholder="Write your reply here..." required></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Attach File (Optional)</label>
+            <input type="file" name="file_attachment" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Reply</button>
+    </form>
+    {% else %}
+    <div class="alert alert-secondary">This announcement is completed. Replies are disabled.</div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <div class="mt-4">
+        <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+    </div>
+</div>
+{% endblock %}

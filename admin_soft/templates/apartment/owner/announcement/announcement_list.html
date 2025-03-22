@@ -1,0 +1,27 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="fw-bold text-primary">Announcements</h2>
+    <hr>
+
+    <ul class="list-group shadow-sm">
+        {% for announcement in announcements %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="w-100">
+                <h5 class="fw-semibold text-dark mb-1">{{ announcement.title }}</h5>
+                <p class="text-muted small mb-1">{{ announcement.message }}</p>
+                <small class="text-secondary"><i class="far fa-clock"></i> {{ announcement.created_at|date:"d M Y, H:i" }}</small>
+            </div>
+            <div class="ms-3">
+                <a href="{% url 'owner_announcement_conversation' announcement.id %}" class="text-primary">
+                    <i class="fas fa-comments fs-4"></i>
+                </a>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-center text-muted">No announcements available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

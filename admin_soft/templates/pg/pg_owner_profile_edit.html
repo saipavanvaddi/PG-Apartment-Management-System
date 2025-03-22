@@ -1,0 +1,128 @@
+{% extends 'pg/pg_base.html' %}
+
+{% block content %}
+<style>
+    body {
+    background-color: #f4f7fc;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff0000;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: 0.3s ease-in-out;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #ff3c00;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.3);
+}
+
+.btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #2baf62;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #ae1515;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: scale(1.05);
+}
+
+.text-center {
+    text-align: center;
+}
+
+</style>
+<div class="container">
+    <h2 class="text-center">Edit PG Owner Profile</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">🏠 PG Name</label>
+            {{ form.pg_name }}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">👤 Owner Name</label>
+            {{ form.name }}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">📞 Contact Number</label>
+            {{ form.contact_number }}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">✉️ Email</label>
+            {{ form.email }}
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">📍 Address</label>
+            {{ form.address }}
+        </div>
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">💾 Update Profile</button>
+            <a href="{% url 'pg_owner_profile' %}" class="btn btn-secondary">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

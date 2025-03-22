@@ -1,0 +1,124 @@
+{% extends 'tenant/base/tenant_base.html' %}
+
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .profile-header {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .profile-form {
+        margin-top: 15px;
+    }
+
+    .profile-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: #333;
+    }
+
+    .profile-form input,
+    .profile-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-save {
+        display: block;
+        width: 100%;
+        background: #28a745;
+        color: white;
+        padding: 12px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 18px;
+        transition: 0.3s ease-in-out;
+        border: none;
+    }
+
+    .btn-save:hover {
+        background: #218838;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">✏️ Edit Profile</div>
+
+    <form method="POST" class="profile-form">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label" for="id_name">Name</label>
+            <input type="text" name="name" id="id_name" class="form-control" value="{{ form.name.value|default_if_none:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="id_email">Email</label>
+            <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value|default_if_none:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="id_contact_number">Contact Number</label>
+            <input type="text" name="contact_number" id="id_contact_number" class="form-control" value="{{ form.contact_number.value|default_if_none:'' }}" required>
+        </div>
+
+        
+
+        <div class="mb-3">
+            <label class="form-label" for="id_proof_name">ID Proof Type</label>
+            <select name="proof_name" id="id_proof_name" class="form-select" required>
+                <option value="Aadhar" {% if form.proof_name.value == "Aadhar" %}selected{% endif %}>Aadhar</option>
+                <option value="Passport" {% if form.proof_name.value == "Passport" %}selected{% endif %}>Passport</option>
+                <option value="Other" {% if form.proof_name.value == "Other" %}selected{% endif %}>Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="id_proof_number">ID Number</label>
+            <input type="text" name="proof_number" id="id_proof_number" class="form-control" value="{{ form.proof_number.value|default_if_none:'' }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="id_proof_file">ID File</label>
+            <input type="file" name="proof_file" id="id_proof_file" class="form-control">
+            {% if form.proof_file.value %}
+                <a href="{{ form.proof_file.value.url }}" target="_blank">View Existing File</a>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-save">💾 Save Changes</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Visitor List</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Flat</th>
+                <th>Purpose</th>
+                <th>Visit Date</th>
+                <th>Check-in</th>
+                <!-- <th>Check-out</th>
+                <th>Actions</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for visitor in visitors %}
+            <tr id="visitor-{{ visitor.id }}">
+                <td>{{ visitor.name }}</td>
+                <td>{{ visitor.contact_number }}</td>
+                <td>{{ visitor.flat.flat_number }}</td>
+                <td>{{ visitor.purpose }}</td>
+                <td>{{ visitor.visit_date }}</td>
+                <td>{{ visitor.check_in_time|date:"Y-m-d H:i" }}</td>
+                <!-- <td>
+                    {% if visitor.is_checked_out %}
+                        {{ visitor.check_out_time|date:"Y-m-d H:i" }}
+                    {% else %}
+                        Pending
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if visitor.action == "Pending" %}
+                        <button class="btn btn-primary btn-sm" >Approve/Decline</button>
+                    {% else %}
+                        <span class="badge badge-success">{{ visitor.action }}</span>
+                    {% endif %}
+                </td> -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No visitors found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Approval Modal -->
+
+
+
+
+{% endblock %}

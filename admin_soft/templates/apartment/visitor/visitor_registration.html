@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Registration</title>
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --secondary-color: #f8f9fa;
+            --accent-color: #4a90e2;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --text-color: #333;
+            --border-radius: 8px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        header h1 {
+            color: white;
+            margin: 0;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .form-card, .info-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2c4a68;
+        }
+        
+        .required:after {
+            content: " *";
+            color: var(--error-color);
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .success-message {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .policy-info {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        .photo-capture {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #photoPreview {
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #ccc;
+            margin: 10px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+        
+        #photoPreview img, #photoPreview video, #photoPreview canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        
+        .camera-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-item i {
+            color: var(--primary-color);
+            margin-right: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mic-button {
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .mic-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .mic-button.recording {
+            background-color: #ff6b6b;
+        }
+        
+        .mic-icon {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .recording-status {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .input-with-mic {
+            display: flex;
+            align-items: center;
+        }
+
+        #phoneSignin {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #phoneSignin .pe_signin_button {
+            display: inline-block;
+            margin: 0 auto;
+        }
+        
+        #otherPurposeGroup {
+            display: none;
+        }
+        
+        #video {
+            width: 100%;
+            max-width: 150px;
+            border-radius: 50%;
+            display: none;
+        }
+        
+        #canvas {
+            display: none;
+        }
+        
+        #photo-preview {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 50%;
+            display: none;
+            margin: 10px auto;
+        }
+
+        .location-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .apartment-location {
+            margin-top: 10px;
+        }
+
+        .map-link {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .map-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Location Button Animation Styles */
+        .refresh-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .refresh-button:active {
+            transform: scale(0.95);
+            background-color: #c0392b;
+        }
+
+        .refresh-button .material-icons {
+            transition: transform 0.3s ease;
+        }
+
+        .refresh-button:active .material-icons {
+            transform: rotate(180deg);
+        }
+
+        .refresh-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .refresh-button:active::after {
+            animation: ripple 0.6s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(100, 100);
+                opacity: 0;
+            }
+        }
+
+        .refresh-button.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .refresh-button.loading .material-icons {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script src="https://www.phone.email/sign_in_button_v1.js" async></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Visitor Registration</h1>
+        <p>Welcome to {{ apartment.name }} </p>
+    </header>
+    
+    <div class="container">
+        <div class="form-card">
+            <h2>Visitor Information</h2>
+            <div id="locationMessage" style="display: none; color: #e74c3c; text-align: center; padding: 15px; background-color: #fde8e8; border-radius: 4px; margin-bottom: 20px;">
+                <p>Please be near the apartment to register.</p>
+                <button type="button" id="refreshLocationBtn" class="btn refresh-button" style="background-color: #e74c3c; margin-top: 10px;">
+                    <span class="material-icons">refresh</span> Refresh Location
+                </button>
+            </div>
+            <form id="visitorForm" method="post" data-has-coordinates="{% if apartment.latitude and apartment.longitude %}true{% else %}false{% endif %}" style="display: none;">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="name" class="required">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">person</span> Full Name
+                    </label>
+                    <div class="input-with-mic">
+                        <input type="text" id="name" name="name" required>
+                        <button type="button" id="micButton" class="mic-button">
+                            <svg class="mic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="recordingStatus" class="recording-status">Listening...</div>
+                </div>
+                
+                <!-- Block selection -->
+<div class="form-group">
+    <label for="block" class="required">
+        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">business</span> Block Name
+    </label>
+    <select id="block" name="block" required>
+        <option value="">Select Block</option>
+        {% for block in blocks %}
+        <option value="{{ block.id }}" data-block-name="{{ block.block_name }}">Block {{ block.block_name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- Flat selection -->
+<div class="form-group">
+    <label for="flat" class="required">
+        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">apartment</span> Flat Number
+    </label>
+    <select id="flat" name="flat" required disabled>
+        <option value="">Select Block First</option>
+    </select>
+</div>
+                
+                <div class="form-group">
+                    <label for="purpose" class="required">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">assignment</span> Purpose of Visit
+                    </label>
+                    <select id="purpose" name="purpose" required>
+                        <option value="">Select Purpose</option>
+                        <option value="Family/Friend">Family/Friend</option>
+                        <option value="Delivery">Delivery</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Service">Service</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="otherPurposeGroup">
+                    <label for="other_purpose">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">edit</span> Specify Purpose
+                    </label>
+                    <input type="text" id="other_purpose" name="other_purpose">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">location_on</span> Your Location
+                    </label>
+                    <div class="location-container">
+                        <span id="locationStatus"></span>
+                        <div id="locationDetails" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <input type="hidden" id="within_range" name="within_range" value="false">
+                    </div>
+                </div>
+                
+                {% if apartment.latitude and apartment.longitude %}
+                <div class="form-group">
+                    <label>
+                        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">apartment</span> Apartment Location
+                    </label>
+                    <div class="apartment-location">
+                        <p>{{ apartment.name }} is located at: {{ apartment.latitude }}, {{ apartment.longitude }}</p>
+                        <a href="https://www.google.com/maps?q={{ apartment.latitude }},{{ apartment.longitude }}" target="_blank" class="map-link">
+                            <span class="material-icons">map</span> View on Google Maps
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="photo-capture">
+                    <h3><span class="material-icons" style="vertical-align: middle;">camera_alt</span> Photo</h3>
+                    <div id="photoPreview">
+                        <video id="video" autoplay playsinline style="display: none;"></video>
+                        <canvas id="canvas" style="display: none;"></canvas>
+                        <img id="photo-preview" alt="Captured photo" style="display: none;">
+                        <span id="placeholderText"><span class="material-icons" style="font-size: 48px;">account_circle</span></span>
+                    </div>
+                    <div class="camera-buttons">
+                        <button type="button" id="start-camera" class="btn">
+                            <span class="material-icons" style="vertical-align: middle;">camera_alt</span> Capture
+                        </button>
+                        <button type="button" id="capture-photo" class="btn" style="display: none;">
+                            <span class="material-icons" style="vertical-align: middle;">photo_camera</span> Take Photo
+                        </button>
+                        <button type="button" id="retake-photo" class="btn" style="display: none;">
+                            <span class="material-icons" style="vertical-align: middle;">refresh</span> Retake
+                        </button>
+                    </div>
+                    <input type="hidden" id="photo" name="photo">
+                </div>
+                
+                <div id="phoneSignin">
+                    <div class="pe_signin_button" id="phoneSigninButton" data-client-id="13460653923500533975"></div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="info-card">
+            <h2>Information & Guidelines</h2>
+            
+            <div class="info-item">
+                <h3>Visiting Hours</h3>
+                <p>Our apartment complex allows visitors between 7:00 AM and 10:00 PM. Any visits outside these hours require pre-approval from the resident and management.</p>
+            </div>
+            
+            <div class="info-item">
+                <h3>Visitor Parking</h3>
+                <p>Visitor parking is available in designated areas marked with "V". Please ensure your vehicle is parked in these areas only to avoid any inconvenience.</p>
+            </div>
+            
+            <div class="info-item">
+                <h3>ID Verification</h3>
+                <p>For security purposes, all visitors are required to provide a valid ID. Your ID information will be securely stored in our system in accordance with our privacy policy.</p>
+            </div>
+            
+            <div class="policy-info">
+                <h3>Visitor Policy</h3>
+                <ul>
+                    <li>All visitors must register at the security desk</li>
+                    <li>Visitors are not permitted to use resident-only amenities</li>
+                    <li>Visitors must be accompanied by the resident they are visiting in common areas</li>
+                    <li>The management reserves the right to deny entry to any visitor</li>
+                    <li>Visitors must comply with all apartment rules and regulations</li>
+                </ul>
+            </div>
+            
+            <div class="success-message" style="display: none;" id="successMessage">
+                <strong>Registration Successful!</strong> Your details have been recorded and the flat owner has been notified of your visit.
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Apartment Management System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Show/hide other purpose field based on selection
+        document.getElementById('purpose').addEventListener('change', function() {
+            const otherPurposeGroup = document.getElementById('otherPurposeGroup');
+            if (this.value === 'Other') {
+                otherPurposeGroup.style.display = 'block';
+            } else {
+                otherPurposeGroup.style.display = 'none';
+            }
+        });
+        
+        
+        // Show phone sign-in button when all required fields are filled
+        function checkForm() {
+            const name = document.getElementById('name').value.trim();
+            const flat = document.getElementById('flat').value.trim();
+            const purpose = document.getElementById('purpose').value;
+            const photoTaken = document.getElementById('photo').value !== '';
+            
+            if (name && flat && purpose && photoTaken) {
+                document.getElementById('phoneSignin').style.display = 'block';
+                const btnPhLogin = document.getElementById('btn_ph_login');
+                if (btnPhLogin) {
+                    btnPhLogin.innerHTML = '<span id="btn_ph_login_text" style="color: rgb(255, 255, 255);">submit</span>';
+                    btnPhLogin.style.backgroundColor = '#3a5a78';
+                    btnPhLogin.style.borderColor = '#3a5a78';
+                }
+            } else {
+                document.getElementById('phoneSignin').style.display = 'none';
+            }
+        }
+
+        // Add input event listeners to all required fields
+        document.getElementById('name').addEventListener('input', checkForm);
+        document.getElementById('flat').addEventListener('input', checkForm);
+        document.getElementById('purpose').addEventListener('change', checkForm);
+
+        // Speech Recognition Setup
+        const micButton = document.getElementById('micButton');
+        const nameInput = document.getElementById('name');
+        const recordingStatus = document.getElementById('recordingStatus');
+        
+        let isRecording = false;
+        let recognition = null;
+        
+        if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                nameInput.value = transcript;
+                // Trigger input event to check form
+                nameInput.dispatchEvent(new Event('input'));
+            };
+            
+            recognition.onend = () => {
+                isRecording = false;
+                micButton.classList.remove('recording');
+                recordingStatus.style.display = 'none';
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                isRecording = false;
+                micButton.classList.remove('recording');
+                recordingStatus.style.display = 'none';
+            };
+            
+            micButton.addEventListener('click', () => {
+                if (!isRecording) {
+                    recognition.start();
+                    isRecording = true;
+                    micButton.classList.add('recording');
+                    recordingStatus.style.display = 'block';
+                } else {
+                    recognition.stop();
+                    isRecording = false;
+                    micButton.classList.remove('recording');
+                    recordingStatus.style.display = 'none';
+                }
+            });
+        } else {
+            micButton.disabled = true;
+            micButton.title = 'Speech recognition not supported in this browser';
+        }
+
+        // Camera functionality
+        const startCameraButton = document.getElementById('start-camera');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture-photo');
+        const retakeButton = document.getElementById('retake-photo');
+        const photoPreview = document.getElementById('photo-preview');
+        const photoInput = document.getElementById('photo');
+        const cameraButtons = document.getElementById('camera-buttons');
+        const placeholderText = document.getElementById('placeholderText');
+        
+        let stream = null;
+
+        startCameraButton.addEventListener('click', async function() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        facingMode: 'user',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 } 
+                    } 
+                });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                startCameraButton.style.display = 'none';
+                captureButton.style.display = 'inline-block';
+                placeholderText.style.display = 'none';
+                
+                // Make sure the capture button is visible
+                setTimeout(() => {
+                    captureButton.style.display = 'inline-block';
+                }, 500);
+            } catch (err) {
+                console.error('Error accessing camera:', err);
+                alert('Could not access the camera. Please ensure you have granted camera permissions.');
+            }
+        });
+
+        // Initialize camera buttons properly
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make sure buttons are in the correct initial state
+            startCameraButton.style.display = 'inline-block';
+            captureButton.style.display = 'none';
+            retakeButton.style.display = 'none';
+        });
+
+        captureButton.addEventListener('click', function() {
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Draw the video frame to the canvas
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert canvas to data URL and set as preview
+            const dataUrl = canvas.toDataURL('image/jpeg');
+            photoPreview.src = dataUrl;
+            photoPreview.style.display = 'block';
+            
+            // Store the data URL in the hidden input
+            photoInput.value = dataUrl;
+            
+            // Stop the camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Hide video and capture button, show retake button
+            video.style.display = 'none';
+            captureButton.style.display = 'none';
+            retakeButton.style.display = 'inline-block';
+            
+            // Check if form is complete
+            checkForm();
+        });
+
+        retakeButton.addEventListener('click', function() {
+            // Show video and capture button, hide retake button and preview
+            video.style.display = 'block';
+            captureButton.style.display = 'inline-block';
+            retakeButton.style.display = 'none';
+            photoPreview.style.display = 'none';
+            
+            // Clear the photo input
+            photoInput.value = '';
+            
+            // Start the camera again
+            startCameraButton.click();
+            
+            // Check form again
+            checkForm();
+        });
+
+        let verifiedPhoneNumber = ''; // Store the verified phone number
+
+        function phoneEmailListener(userObj) {
+            var user_json_url = userObj.user_json_url;
+            
+            // Make API call to our backend with form data
+            var apiUrl = "{% url 'get_user_info' %}" + "?user_json_url=" + encodeURIComponent(user_json_url);
+            // Make API call to our backend with form data
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error('Error:', data.error);
+                        return;
+                    }
+                    
+                    // Store the verified phone number
+                    verifiedPhoneNumber = data.phone_number;
+                    
+                    // Show success message
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    // Automatically submit the form
+                    submitForm(verifiedPhoneNumber);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error during verification. Please try again.');
+                });
+        }
+
+        // Get CSRF token from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to submit the form
+        function submitForm(phoneNumber) {
+            const formData = new FormData(document.getElementById('visitorForm'));
+            
+            // Add the phone number to the form data
+            formData.append('contact_number', phoneNumber);
+            
+            // Convert data URL to blob for upload if it exists
+            if (photoInput.value && photoInput.value.startsWith('data:image')) {
+                try {
+                    const photoDataUrl = photoInput.value;
+                    const format = photoDataUrl.split(';')[0].split(':')[1];
+                    const byteString = atob(photoDataUrl.split(',')[1]);
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    
+                    const blob = new Blob([ab], { type: format });
+                    formData.set('photo', blob, 'photo.jpg');
+                } catch (error) {
+                    console.error('Error processing photo:', error);
+                    alert('Error processing photo. Please try again.');
+                    return;
+                }
+            }
+            
+            // Get the save URL
+            var saveUrl = "{% url 'save_visitor' %}";
+            
+            // Disable form inputs during submission
+            const formInputs = document.querySelectorAll('#visitorForm input, #visitorForm select, #visitorForm button');
+            formInputs.forEach(input => input.disabled = true);
+            
+            fetch(saveUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Stop the camera stream if it's active
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    // Show success message before redirect
+                    document.getElementById('successMessage').style.display = 'block';
+                    setTimeout(function() {
+                        window.location.href = "{% url 'visitor_success' %}";
+                    }, 1000);
+                } else {
+                    alert('Error saving visitor details: ' + data.error);
+                    console.error('Server error:', data.error);
+                    // Re-enable form inputs
+                    formInputs.forEach(input => input.disabled = false);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error saving visitor details. Please try again.');
+                // Re-enable form inputs
+                formInputs.forEach(input => input.disabled = false);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('visitorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Validate required fields
+            const name = document.getElementById('name').value;
+            const flatId = document.getElementById('flat').value;
+            const purpose = document.getElementById('purpose').value;
+            const photoInput = document.getElementById('photo');
+
+            if (!name || !flatId || !purpose) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            if (!photoInput.value) {
+                alert('Please capture a photo of the visitor');
+                return;
+            }
+
+            try {
+                const formData = {
+                    name: name,
+                    flat_id: flatId,
+                    purpose: purpose,
+                    other_purpose: document.getElementById('other_purpose').value,
+                    visit_date: new Date().toISOString().split('T')[0],
+                    photo: photoInput.value  // Use the photo data from the hidden input
+                };
+
+                const response = await fetch('/save_visitor/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    alert('Visitor registered successfully!');
+                    window.location.href = '/visitor_success/';
+                } else {
+                    alert('Error: ' + (data.message || 'Unknown error occurred'));
+                    console.error('Server error:', data);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while saving visitor details. Please try again.');
+            }
+        });
+
+        // Function to get location
+        function getLocation() {
+            const locationStatus = document.getElementById('locationStatus');
+            const locationMessage = document.getElementById('locationMessage');
+            const visitorForm = document.getElementById('visitorForm');
+            const refreshButton = document.getElementById('refreshLocationBtn');
+            
+            // Add loading state to button
+            refreshButton.classList.add('loading');
+            locationStatus.textContent = "Getting location...";
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    // Success callback
+                    function(position) {
+                        // Remove loading state from button
+                        refreshButton.classList.remove('loading');
+                        
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        
+                        // Update hidden inputs with coordinates
+                        document.getElementById('latitude').value = latitude;
+                        document.getElementById('longitude').value = longitude;
+                        
+                        // Check if within apartment range
+                        if (hasCoordinates) {
+                            const apartmentLat = parseFloat("{{ apartment.latitude }}");
+                            const apartmentLng = parseFloat("{{ apartment.longitude }}");
+                            const distance = calculateDistance(latitude, longitude, apartmentLat, apartmentLng);
+                            
+                            // Log coordinates and distance to console
+                            console.log('Current Location:', latitude, longitude);
+                            console.log('Apartment Location:', apartmentLat, apartmentLng);
+                            console.log('Distance:', (distance * 1000).toFixed(0), 'meters');
+                            
+                            const locationDetails = document.getElementById('locationDetails');
+                            
+                            if (distance <= 0.05) { // 0.05 km = 50 meters
+                                locationStatus.textContent = "Location verified! You are within 50m of the apartment.";
+                                locationStatus.style.color = '#2ecc71';
+                                locationDetails.textContent = '';
+                                document.getElementById('within_range').value = 'true';
+                                // Show form and hide location message
+                                visitorForm.style.display = 'block';
+                                locationMessage.style.display = 'none';
+                                checkForm();
+                            } else {
+                                locationStatus.textContent = "You are too far from the apartment.";
+                                locationStatus.style.color = '#e74c3c';
+                                // Display detailed location information
+                                locationDetails.innerHTML = `
+                                    Your coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}<br>
+                                    Apartment coordinates: ${apartmentLat.toFixed(6)}, ${apartmentLng.toFixed(6)}<br>
+                                    Distance: ${(distance * 1000).toFixed(0)} meters
+                                `;
+                                document.getElementById('within_range').value = 'false';
+                                // Hide form and show location message
+                                visitorForm.style.display = 'none';
+                                locationMessage.style.display = 'block';
+                            }
+                        } else {
+                            // Update status message
+                            locationStatus.textContent = "Location acquired: " + 
+                                latitude.toFixed(6) + ", " + longitude.toFixed(6);
+                            locationStatus.style.color = '#2ecc71';
+                            document.getElementById('within_range').value = 'true';
+                            // Show form
+                            visitorForm.style.display = 'block';
+                            locationMessage.style.display = 'none';
+                            checkForm();
+                        }
+                    },
+                    // Error callback
+                    function(error) {
+                        // Remove loading state from button
+                        refreshButton.classList.remove('loading');
+                        
+                        let errorMessage = "Error getting location: ";
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                errorMessage += "Permission denied.";
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                errorMessage += "Position unavailable.";
+                                break;
+                            case error.TIMEOUT:
+                                errorMessage += "Request timed out.";
+                                break;
+                            default:
+                                errorMessage += "Unknown error.";
+                        }
+                        locationStatus.textContent = errorMessage;
+                        locationStatus.style.color = '#e74c3c';
+                        // Hide form and show location message
+                        visitorForm.style.display = 'none';
+                        locationMessage.style.display = 'block';
+                    },
+                    // Options
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                // Remove loading state from button
+                refreshButton.classList.remove('loading');
+                
+                locationStatus.textContent = "Geolocation is not supported by this browser.";
+                locationStatus.style.color = '#e74c3c';
+                // Hide form and show location message
+                visitorForm.style.display = 'none';
+                locationMessage.style.display = 'block';
+            }
+        }
+
+        // Function to calculate distance between two coordinates using Haversine formula
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of the earth in km
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            const distance = R * c; // Distance in km
+            return distance;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+
+        // Initialize variables
+        const hasCoordinates = document.getElementById('visitorForm').dataset.hasCoordinates === 'true';
+
+        // Update the refresh location button event listener
+        document.getElementById('refreshLocationBtn').addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            // Add click animation class
+            this.classList.add('clicked');
+            
+            // Remove the class after animation completes
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 300);
+            
+            // Get location
+            getLocation();
+        });
+
+        // Call getLocation when page loads if coordinates are available
+        if (hasCoordinates) {
+            getLocation();
+        } else {
+            // If no coordinates, show the form
+            document.getElementById('visitorForm').style.display = 'block';
+        }
+
+        // Dynamic flat loading based on block selection
+        document.getElementById('block').addEventListener('change', function() {
+            const blockId = this.value;
+            const flatSelect = document.getElementById('flat');
+            
+            if (!blockId) {
+                flatSelect.innerHTML = '<option value="">Select Block First</option>';
+                flatSelect.disabled = true;
+                return;
+            }
+
+            // Enable flat select and show loading state
+            flatSelect.disabled = true;
+            flatSelect.innerHTML = '<option value="">Loading flats...</option>';
+
+            // Fetch flats for selected block
+            fetch(`/get-flats/${blockId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    flatSelect.innerHTML = '<option value="">Select Flat</option>';
+                    data.flats.forEach(flat => {
+                        const option = document.createElement('option');
+                        option.value = flat.id;
+                        option.textContent = `Flat ${flat.flat_number}`;
+                        flatSelect.appendChild(option);
+                    });
+                    flatSelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error loading flats:', error);
+                    flatSelect.innerHTML = '<option value="">Error loading flats</option>';
+                    flatSelect.disabled = true;
+                });
+        });
+    </script>
+</body>
+</html>

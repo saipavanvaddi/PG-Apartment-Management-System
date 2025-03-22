@@ -1,0 +1,35 @@
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="complaintModalLabel"> New Complaint</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form method="POST" enctype="multipart/form-data" class="complaint-form">
+          <div class="modal-body">
+              {% csrf_token %}
+              <label for="category">Category:</label>
+              <select name="category" id="category" required>
+                  <option value="">-- Select Category --</option>
+                  <option value="Electrician">Electrician</option>
+                  <option value="Plumber">Plumber</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Other">Other</option>
+              </select>
+
+              <label for="other_category" id="other_label">Specify Other:</label>
+              <input type="text" name="other_category" id="other_category" placeholder="Specify other category">
+
+              <label for="complaint">Enter Complaint:</label>
+              <textarea name="complaint_text" required placeholder="Describe your issue in detail..."></textarea>
+
+              <label for="image">Upload Image (Optional):</label>
+              <input type="file" name="image" accept="image/*">
+
+              <button type="submit" class="form-submit-btn">Submit Complaint</button>
+          </div>
+         
+      </form>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+{% extends "apartment/admin/base/apartment_admin_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Announcements</h2>
+        <a href="{% url 'send_announcement' %}" class="btn btn-primary">+ Add Announcement</a>
+    </div>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for announcement in announcements %}
+            <tr>
+                <td>{{ announcement.created_at|date:"d M Y, H:i" }}</td>
+                <td>{{ announcement.title }}</td>
+                <td>{{ announcement.message }}</td>
+                <td class="text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-3">
+                    <!-- Chat Icon -->
+                    <a href="{% url 'admin_announcement_conversation' announcement.id %}" class="text-primary">
+                        <i class="fas fa-comments fa-lg"></i>
+                    </a>
+
+                    <!-- Tick Button to Mark as Completed -->
+                    {% if not announcement.is_completed %}
+                        <button class="border-0 bg-transparent text-success" 
+                            data-id="{{ announcement.id }}"
+                            data-has-meeting="{% if announcement.meeting_schedule %}1{% else %}0{% endif %}"
+                            onclick="handleCompletion(this.dataset.id, this.dataset.hasMeeting === '1')">
+                            <i class="fas fa-check-circle fs-4"></i>
+                        </button>
+                    {% else %}
+                        <span class="badge bg-success">Finished</span>
+                    {% endif %}
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No announcements found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal for Final Outcome -->
+<div class="modal fade" id="outcomeModal" tabindex="-1" aria-labelledby="outcomeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="outcomeModalLabel">Enter Meeting Outcome</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="outcomeForm">
+                    <input type="hidden" id="announcement_id">
+                    <textarea class="form-control" id="outcome_text" rows="4" placeholder="Enter meeting outcome..."></textarea>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitOutcome()">Save Outcome</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleCompletion(announcementId, hasMeeting) {
+        document.getElementById("announcement_id").value = announcementId;
+
+        if (hasMeeting) {
+            var outcomeModal = new bootstrap.Modal(document.getElementById('outcomeModal'));
+            outcomeModal.show();
+        } else {
+            markCompleted(announcementId, null);  // If no meeting, directly mark as completed
+        }
+    }
+
+    function submitOutcome() {
+        var announcementId = document.getElementById("announcement_id").value;
+        var outcomeText = document.getElementById("outcome_text").value;
+        markCompleted(announcementId, outcomeText);
+    }
+
+    function markCompleted(announcementId, finalOutcome) {
+        fetch("{% url 'mark_announcement_completed' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                announcement_id: announcementId,
+                final_outcome: finalOutcome
+            })
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            }
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+<div class="table-responsive p-0">
+    <table class="table align-items-center mb-0">
+        <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Contact Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Assigned Room</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tenant in tenants %}
+            <tr>
+                <!-- Name Column with Clickable Popover -->
+                <td class="text-center">
+                    <span class="tenant-popover" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-html="true"
+                        title="Tenant Info" 
+                        data-bs-content="
+                            <strong>Email:</strong> {{ tenant.email }}<br>
+                            <strong>Check in date:</strong> {{ tenant.check_in_date }}<br>
+                            <strong>ID Proof:</strong> {% if tenant.proof_name == 'Other' %}{{ tenant.other_proof_name }}{% else %}{{ tenant.proof_name }}{% endif %}<br>
+                            <strong>ID Number:</strong> {{ tenant.proof_number }}<br>
+                            {% if tenant.proof_file %}
+                                <a href='{{ tenant.proof_file.url }}' target='_blank' class='view-file text-primary'>View ID File</a>
+                            {% else %}
+                                No File
+                            {% endif %}
+                        ">
+                        {{ tenant.name }}
+                    </span>
+                </td>
+                <td class="text-center">{{ tenant.contact_number }}</td>
+                <td class="text-center">{{ tenant.assigned_bed }}</td>
+                <td class="text-center">
+                    <button class="btn p-0 border-0 bg-transparent me-3" data-bs-toggle="modal" data-bs-target="#editTenantModal{{ tenant.id }}">
+                        <i class="fas fa-edit text-primary fs-5"></i>
+                    </button>
+                    <form action="{% url 'delete_tenant' tenant.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn p-0 border-0 bg-transparent" onclick="return confirm('Are you sure you want to delete this tenant?')">
+                            <i class="fas fa-trash-alt text-danger fs-5"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <!-- Edit Tenant Modal -->
+            {% include "pg/owner_tenant_edit.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Enable Bootstrap Popover & Prevent Closing on Click -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Initialize Bootstrap popovers
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl, {
+            container: 'body',
+            trigger: 'focus',
+            html: true
+        });
+    });
+
+    // Prevent popover from closing when clicking inside it or on View ID File
+    document.body.addEventListener('click', function (event) {
+        if (event.target.closest('.popover') || event.target.closest('.tenant-popover')) {
+            event.stopPropagation();
+        }
+        
+        if (event.target.classList.contains('view-file')) {
+            event.preventDefault();
+            window.open(event.target.href, '_blank'); // Open file in a new tab
+        }
+    });
+
+    // Prevent popover from closing on 'hide' event if clicking inside
+    popoverList.forEach(popover => {
+        popover._element.addEventListener('hide.bs.popover', function(e) {
+            let clickTarget = document.activeElement;
+            if (clickTarget.closest('.popover') || clickTarget.closest('.tenant-popover')) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>

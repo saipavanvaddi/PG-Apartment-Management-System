@@ -1,0 +1,57 @@
+{% extends "apartment/admin/base/apartment_admin_base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Dashboard</h1>
+    <div class="row">
+        <!-- Overview Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Overview
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Rooms:</strong> 10</p>
+                    <p><strong>Total Tenants:</strong> 45</p>
+                </div>
+            </div>
+        </div>
+        <!-- Payments Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Payments
+                </div>
+                <div class="card-body">
+                    <p><strong>Due Payments:</strong> $5,000</p>
+                    <p><strong>Last Payment:</strong> $1,000</p>
+                </div>
+            </div>
+        </div>
+        <!-- Complaints Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    Complaints
+                </div>
+                <div class="card-body">
+                    <p><strong>Open Complaints:</strong> 3</p>
+                    <p><strong>Resolved Complaints:</strong> 5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Additional Dashboard Content -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card mt-4">
+                <div class="card-header bg-secondary text-white">
+                    Recent Activity
+                </div>
+                <div class="card-body">
+                    <p>No recent activity to display.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

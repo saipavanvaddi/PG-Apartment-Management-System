@@ -1,0 +1,130 @@
+{% extends 'tenant/base/tenant_base.html' %}
+
+{% block content %}
+<style>
+    .dashboard-container {
+        background-color: #f8f9fa;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-title {
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .dashboard-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .dashboard-card:hover {
+        transform: scale(1.02);
+    }
+
+    .dashboard-card h4 {
+        font-size: 20px;
+        font-weight: bold;
+        color: #007bff;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-card p {
+        font-size: 16px;
+        color: #555;
+        margin: 5px 0;
+    }
+
+    .amount-due {
+        color: red;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .advance-amount {
+        color: green;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .welcome-container {
+        text-align: center;
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .welcome-title {
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .welcome-text {
+        font-size: 18px;
+        font-style: italic;
+        opacity: 0.9;
+    }
+
+    .checkin-date {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="dashboard-container">
+        <!-- <h2 class="dashboard-title">Tenant Dashboard</h2> -->
+
+        <div class="welcome-container">
+            <h2 class="welcome-title text-white">🏠 Welcome, {{ tenant.name }}! 🎉</h2>
+            <p class="welcome-text">We’re glad to have you here. Your home away from home!</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <h4>Room Details</h4>
+                    <p><strong>Room:</strong> {{ room_number }}</p>
+                    <p><strong>Bed:</strong> {{ bed_number }}</p>
+                    <p class="checkin-date"><strong>Check-in Date:</strong> {{ tenant.check_in_date }}</p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="dashboard-card">
+                    <h4>Payment Status</h4>
+                    <p><strong>Status:</strong> {{ payment_status }}</p>
+                    <p class="amount-due"><strong>Amount Due:</strong> ₹{{ tenant.due_amount }}</p>
+                    {% if tenant.due_amount == 0 %}
+                        <p class="advance-amount"><strong>Advance Amount:</strong> ₹{{ tenant.advance_amount }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

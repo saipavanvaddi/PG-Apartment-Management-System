@@ -1,0 +1,198 @@
+{% extends "apartment/admin/base/apartment_admin_base.html" %}
+
+{% block content %}
+<style>
+    .accordion-button {
+    padding: 8px 15px; /* Reduce padding to decrease height */
+    font-size: 14px; /* Adjust font size if necessary */
+}
+
+</style>
+<div class="container mt-3">
+    <div class="card shadow-lg p-4 border-0 rounded-4">
+        <div class="card-body">
+            <h2 class="mb-3 text-center text-primary fw-bold">
+                <i class="fas fa-bullhorn"></i> Create Announcement
+            </h2>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Title -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-heading me-1"></i> Title
+                    </label>
+                    <input type="text" name="title" id="id_title" class="form-control" required>
+                </div>
+
+                <!-- Message -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-envelope me-1"></i> Message
+                    </label>
+                    <textarea name="message" id="id_message" class="form-control" rows="4" required></textarea>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-upload me-1"></i> Upload Image
+                    </label>
+                    <input type="file" name="image" id="id_image" class="form-control">
+                </div>
+
+                <!-- File Attachment -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-paperclip me-1"></i> Attach a Document
+                    </label>
+                    <input type="file" name="file_attachment" id="id_file_attachment" class="form-control">
+                </div>
+
+                <!-- Poll Section -->
+                <div class="accordion mt-3" id="pollSection">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed shadow-sm text-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#pollCollapse">
+                                <i class="fas fa-poll-h me-2"></i> Add Poll
+                            </button>
+                        </h2>
+                        <div id="pollCollapse" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <!-- Poll Question -->
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-question-circle me-1"></i> Poll Question
+                                    </label>
+                                    <input type="text" name="poll_question" id="id_poll_question" class="form-control">
+                                </div>
+                
+                                <!-- Poll Options -->
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-list-ul me-1"></i> Poll Options
+                                    </label>
+                                    <div id="poll-options-container">
+                                        <!-- Default Two Poll Options -->
+                                        <div class="input-group mb-2">
+                                            <input type="text" name="poll_options[]" class="form-control" placeholder="Option 1" >
+                                        </div>
+                                        <div class="input-group mb-2">
+                                            <input type="text" name="poll_options[]" class="form-control" placeholder="Option 2" >
+                                        </div>
+                                    </div>
+                                    <!-- Add Option Button -->
+                                    <button type="button" class="btn btn-success btn-sm mt-2" id="add-option">
+                                        <i class="fas fa-plus"></i> Add Option
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meeting Section -->
+                <div class="accordion mt-3" id="meetingSection">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed shadow-sm  text-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#meetingCollapse">
+                                <i class="fas fa-calendar-alt me-2"></i> Schedule a Meeting  
+                            </button>
+                        </h2>
+                        <div id="meetingCollapse" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-heading me-1"></i> Meeting Title
+                                    </label>
+                                    <input type="text" name="new_meeting_title" id="id_new_meeting_title"
+                                        class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-book me-1"></i> Agenda
+                                    </label>
+<<<<<<< HEAD
+                                    <textarea name="new_meeting_agenda" id="id_new_meeting_agenda"
+=======
+                                    <input type="text" name="new_meeting_agenda" id="id_new_meeting_agenda"
+                                        class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-align-left me-1"></i> Description
+                                    </label>
+                                    <textarea name="new_meeting_description" id="id_new_meeting_description"
+>>>>>>> 7193068887ef19bc8f1f3ac6bb783491e40897bb
+                                        class="form-control" rows="3"></textarea>
+                                </div>
+                                <!-- <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="fas fa-align-left me-1"></i> Description
+                                    </label>
+                                    <textarea name="new_meeting_description" id="id_new_meeting_description"
+                                        class="form-control" rows="3"></textarea>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            <i class="fas fa-calendar-day me-1"></i> Meeting Date
+                                        </label>
+                                        <input type="date" name="new_meeting_date" id="id_new_meeting_date"
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">
+                                            <i class="fas fa-clock me-1"></i> Meeting Time
+                                        </label>
+                                        <input type="time" name="new_meeting_time" id="id_new_meeting_time"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">
+                        <i class="fas fa-paper-plane"></i> Send Announcement
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const optionsContainer = document.getElementById("poll-options-container");
+        const addOptionButton = document.getElementById("add-option");
+
+        addOptionButton.addEventListener("click", function() {
+            const optionCount = optionsContainer.children.length + 1;
+
+            // Create new input field
+            const newOption = document.createElement("div");
+            newOption.classList.add("input-group", "mb-2");
+            newOption.innerHTML = `
+                <input type="text" name="poll_options[]" class="form-control" placeholder="Option ${optionCount}">
+                <button type="button" class="btn btn-danger btn-sm remove-option">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+
+            optionsContainer.appendChild(newOption);
+
+            // Remove Option Button Functionality
+            newOption.querySelector(".remove-option").addEventListener("click", function() {
+                optionsContainer.removeChild(newOption);
+            });
+        });
+    });
+</script>
+{% endblock %}

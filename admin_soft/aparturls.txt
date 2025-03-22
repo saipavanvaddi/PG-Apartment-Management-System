@@ -1,0 +1,53 @@
+from django.urls import path
+from . import apartviews  # Import the views from apartviews.py
+
+app_name = 'apartments'  # Namespace for URL names
+
+urlpatterns = [
+    # Owner Login
+    path('apartment/owner/login/', apartviews.ApartmentLoginViewOwner.as_view(), name='apartment_owner_login'),
+    path('apartment/owner/logout/', apartviews.apartment_owner_logout, name='apartment_owner_logout'),
+    
+    # Owner Dashboard and Management
+    path('apartment/owner/dashboard/', apartviews.apartment_owner_dashboard, name='apartment_owner_dashboard'),
+    path('apartment/owner/rooms/', apartviews.room_dashboard, name='room_dashboard'),
+    path('apartment/owner/rooms/add/', apartviews.add_room, name='add_room'),
+    path('apartment/owner/rooms/edit/<int:room_id>/', apartviews.edit_room, name='edit_room'),
+    path('apartment/owner/rooms/delete/<int:room_id>/', apartviews.delete_room, name='delete_room'),
+    
+    # Owner Tenant Management
+    path('apartment/owner/tenants/', apartviews.apartment_owner_tenant_dashboard, name='apartment_owner_tenant_dashboard'),
+    path('apartment/owner/tenants/edit/<int:tenant_id>/', apartviews.edit_tenant, name='edit_tenant'),
+    path('apartment/owner/tenants/delete/<int:tenant_id>/', apartviews.delete_tenant, name='delete_tenant'),
+    
+    # Owner Profile
+    path('apartment/owner/profile/', apartviews.apartment_owner_profile, name='apartment_owner_profile'),
+    path('apartment/owner/profile/edit/', apartviews.apartment_owner_profile_edit, name='apartment_owner_profile_edit'),
+    
+    # Owner Complaints and Payments
+    path('apartment/owner/complaints/', apartviews.owner_complaints, name='owner_complaints'),
+    path('apartment/owner/payments/', apartviews.owner_payments, name='owner_payments'),
+    path('apartment/owner/complaints/resolve/<int:complaint_id>/', apartviews.resolve_complaint, name='resolve_complaint'),
+    path('apartment/owner/payments/complete/<int:payment_id>/', apartviews.mark_payment_completed, name='mark_payment_completed'),
+    path('apartment/owner/payments/failed/<int:payment_id>/', apartviews.mark_payment_failed, name='mark_payment_failed'),
+    
+    # Apartment Management
+    path('apartment/manage/', apartviews.manage_apartment, name='manage_apartment'),
+    
+    # Tenant Login
+    path('apartment/tenant/login/', apartviews.TenantLoginView.as_view(), name='apartment_tenant_login'),
+    path('apartment/tenant/logout/', apartviews.apartment_tenant_logout, name='apartment_tenant_logout'),
+    
+    # Tenant Dashboard and Profile
+    path('apartment/tenant/dashboard/', apartviews.tenant_dashboard, name='apartment_tenant_dashboard'),
+    path('apartment/tenant/profile/', apartviews.apartment_tenant_profile, name='apartment_tenant_profile'),
+    path('apartment/tenant/profile/edit/', apartviews.apartment_tenant_edit_profile, name='apartment_tenant_edit_profile'),
+    
+    # Tenant Payments and Complaints
+    path('apartment/tenant/payments/', apartviews.apartment_tenant_payments, name='apartment_tenant_payments'),
+    path('apartment/tenant/complaints/', apartviews.apartment_tenant_complaints, name='apartment_tenant_complaints'),
+    path('apartment/tenant/make-payment/<int:tenant_id>/', apartviews.apartment_tenant_make_payment, name='apartment_tenant_make_payment'),
+    
+    # Dashboard View (assuming it's for the owner)
+    path('apartment/dashboard/', apartviews.dashboard_view, name='dashboard_view'),
+]

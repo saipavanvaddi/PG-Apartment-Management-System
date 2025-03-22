@@ -1,0 +1,112 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<style>
+  /* General Styles */
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+/* Form Card */
+.form-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Button Styles */
+.btn {
+  background: #ff6200;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: #ff6200;
+}
+
+/* View Tenants Link */
+.view-link {
+  display: block;
+  margin-top: 15px;
+  text-decoration: none;
+  color: #ff6200;
+  font-weight: bold;
+}
+
+.view-link:hover {
+  text-decoration: underline;
+}
+
+</style>
+  <div class="container">
+    <div class="form-card">
+      <h2 class="title">Add Tenant</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="id_name">Tenant Name:</label>
+          {{ form.name }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_email">Email:</label>
+          {{ form.email }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_contact_number">Contact Number:</label>
+          {{ form.contact_number }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_proof_file">Upload Proof:</label>
+          {{ form.proof_file }}
+        </div>
+
+        <button type="submit" class="btn">Add Tenant</button>
+      </form>
+
+      <a href="{% url 'owner_view_tenant' %}" class="view-link">View Tenants</a>
+    </div>
+  </div>
+{% endblock %}

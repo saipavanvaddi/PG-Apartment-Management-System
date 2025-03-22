@@ -1,0 +1,83 @@
+{% extends 'tenant/base/tenant_base.html' %}
+
+{% block content %}
+<style>
+    .profile-container {
+        max-width: 95%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .profile-header {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .profile-details p {
+        font-size: 16px;
+        padding: 5px 0;
+        color: #333;
+    }
+
+    .btn-container {
+        margin-top: 15px;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background: #007bff;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-header">🏠 User Profile</div>
+
+    <div class="profile-details">
+        <p><strong>PG Name:</strong> {{ tenant.pg_name }}</p>
+        <p><strong>Name:</strong> {{ tenant.name }}</p>
+        <p><strong>Email:</strong> {{ tenant.email }}</p>
+        <p><strong>Contact:</strong> {{ tenant.contact_number }}</p>
+        <p><strong>Room:</strong> {{ tenant.assigned_bed }}</p>
+        <p><strong>Check-in Date:</strong> {{ tenant.check_in_date }}</p>
+        <p><strong>Proof Name:</strong> {{ tenant.proof_name }}</p>
+        <p><strong>Proof Number:</strong> {{ tenant.proof_number }}</p>
+        {% if tenant.proof_file %}
+            <p><strong>Proof File:</strong> <a href="{{ tenant.proof_file.url }}" target="_blank">View Document</a></p>
+        {% endif %}
+    </div>
+
+    <div class="btn-container">
+        <a href="{% url 'pg_tenant_profile_edit' %}" class="btn-primary">✏️ Update Profile</a>
+    </div>
+</div>
+
+{% endblock %}

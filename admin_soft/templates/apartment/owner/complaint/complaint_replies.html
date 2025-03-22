@@ -1,0 +1,54 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<style>
+  /* .list-group-item {
+    border: none !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+}
+.list-group {
+    border: none !important;
+} */
+  
+</style>
+<div class="container mt-4">
+    <h2>Complaint Replies</h2>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ complaint.subject }}</h5>
+            <p class="card-text">{{ complaint.description }}</p>
+            <p><strong>Status:</strong> {{ complaint.get_status_display }}</p>
+        </div>
+    </div>
+
+    <h4>Replies</h4>
+    <ul class="list-group mb-3">
+        {% for reply in replies %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+                <strong>{{ reply.sender }}</strong>
+                <small class="text-muted">{{ reply.timestamp }}</small>
+            </div>
+            <p class="mb-0">{{ reply.message }}</p>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-center">No replies yet.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Reply Form -->
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea id="replyMessage" name="message" class="form-control" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Comment</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "pg/pg_base.html" %}
+{% block content %}
+<!-- <h2>Manage PG</h2> -->
+<table>
+    <tr><th>Name</th><th>Location</th><th>Owner</th><th>Actions</th></tr>
+    {% for pg in pg_list %}
+        <tr>
+            <td>{{ pg.name }}</td>
+            <td>{{ pg.location }}</td>
+            <td>{{ pg.owner }}</td>
+            <td><button>Edit</button> <button>Delete</button></td>
+        </tr>
+    {% endfor %}
+</table>
+<button>Add PG</button>
+{% endblock %}

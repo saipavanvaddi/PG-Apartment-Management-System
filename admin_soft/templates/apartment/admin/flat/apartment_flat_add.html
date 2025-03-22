@@ -1,0 +1,94 @@
+{% extends 'apartment/admin/base/apartment_admin_base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Add New Flat</h2>
+    <form method="post" enctype="multipart/form-data" class="form-classic">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Add Flat</button>
+    </form>
+    <br>
+    <a href="{% url 'list_flats' %}" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+
+  <style>
+    /* Classic Look Styling */
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #f9f6f0; /* Creamy off-white for a vintage feel */
+      border: 1px solid #d4c9a8; /* Subtle goldish border */
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      font-family: 'Georgia', serif;
+      font-size: 32px;
+      color: #3b2f2f; /* Deep brown for elegance */
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-classic p {
+      margin-bottom: 18px;
+    }
+
+    .form-classic label {
+      font-family: 'Georgia', serif;
+      color: #4a3c31; /* Warm brown */
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-classic input,
+    .form-classic select,
+    .form-classic textarea {
+      width: 100%;
+      padding: 10px;
+      font-family: 'Times New Roman', serif;
+      font-size: 16px;
+      border: 1px solid #bcae91; /* Soft beige border */
+      border-radius: 4px;
+      background-color: #fffef5; /* Very light cream */
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-family: 'Georgia', serif;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background-color: #6b4e31; /* Classic coffee brown */
+      color: #fff;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #8c6c4f; /* Lighter brown on hover */
+    }
+
+    .btn-secondary {
+      background-color: #d4c9a8; /* Muted gold */
+      color: #3b2f2f; /* Deep brown text */
+      border: 1px solid #bcae91;
+      text-align: center;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e0d7b9; /* Slightly lighter gold */
+    }
+  </style>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% for tenant in tenants %}
+<div class="modal fade" id="editTenantModal{{ tenant.id }}" tabindex="-1" aria-labelledby="editTenantModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Edit Tenant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'edit_tenant' tenant.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{ tenant.name }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ tenant.email }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contact Number</label>
+            <input type="text" name="contact_number" class="form-control" value="{{ tenant.contact_number }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Assigned Room</label>
+            <select name="assigned_bed" class="form-select">
+                {% for bed in form.fields.assigned_bed.queryset %}
+                    <option value="{{ bed.id }}" {% if tenant.assigned_bed.id == bed.id %}selected{% endif %}>
+                        {{ bed }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+          <div class="mb-3">
+            <label class="form-label">ID Proof Type</label>
+            <select name="proof_name" class="form-select" required>
+              <option value="Aadhar" {% if tenant.proof_name == "Aadhar" %}selected{% endif %}>Aadhar</option>
+              <option value="Passport" {% if tenant.proof_name == "Passport" %}selected{% endif %}>Passport</option>
+              <option value="Other" {% if tenant.proof_name == "Other" %}selected{% endif %}>Other</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">ID Number</label>
+            <input type="text" name="proof_number" class="form-control" value="{{ tenant.proof_number }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">ID File</label>
+            <input type="file" name="proof_file" class="form-control">
+            {% if tenant.proof_file %}
+              <a href="{{ tenant.proof_file.url }}" target="_blank">View Existing File</a>
+            {% endif %}
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}

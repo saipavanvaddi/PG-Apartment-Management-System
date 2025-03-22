@@ -1,0 +1,117 @@
+<div class="table-responsive">
+  <table class="table table-hover mb-0">
+    <thead class="bg-light text-dark fw-medium">
+      <tr>
+        <th class="py-3 ps-4">Flat Number</th>
+        <th class="py-3">Amount</th>
+        <th class="py-3">Payment Date</th>
+        <th class="py-3">Transaction ID</th>
+        <th class="py-3">Payment Mode</th>
+        <th class="py-3">Status</th>
+        <th class="py-3">Remarks</th>
+        <th class="py-3 pe-4">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in payments %}
+        <tr class="align-middle hover-effect">
+          <td class="ps-4">{{ payment.flat.flat_number }}</td>
+          <td>₹{{ payment.amount }}</td>
+          <td>{{ payment.payment_date }}</td>
+          <td>{{ payment.transaction_id|default:"N/A" }}</td>
+          <td>{{ payment.get_payment_mode_display }}</td>
+          <td>
+            <span class="badge 
+              {% if payment.status == 'COMPLETED' %}bg-success
+              {% elif payment.status == 'FAILED' %}bg-danger
+              {% else %}bg-warning text-dark{% endif %} px-2 py-1">
+              {{ payment.get_status_display }}
+            </span>
+          </td>
+          <td>{{ payment.remarks|default:"No remarks" }}</td>
+          <td class="pe-4 text-center">
+            <button type="button"
+                    class="border-0 bg-transparent p-0 text-warning update-status-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#updateStatusModal"
+                    data-payment-id="{{ payment.pk }}"
+                    data-flat-number="{{ payment.flat.flat_number }}"
+                    data-current-status="{{ payment.status }}"
+                    data-remarks="{{ payment.remarks|default_if_none:'' }}">
+                <i class="fas fa-pen-to-square fs-5"></i>
+            </button>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="8" class="text-center py-4 text-muted">No payments found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Update Payment Status Modal -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-labelledby="updateStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateStatusModalLabel">Update Payment Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'update_payment_status' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="payment_id" id="payment_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Flat Number</label>
+                        <p id="flat_number" class="form-control-plaintext"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">New Status</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="PENDING">Pending</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="FAILED">Failed</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea name="remarks" id="remarks" class="form-control"></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Populate Modal Fields -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var updateButtons = document.querySelectorAll(".update-status-btn");
+
+    updateButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var paymentId = button.getAttribute("data-payment-id");
+            var flatNumber = button.getAttribute("data-flat-number");
+            var currentStatus = button.getAttribute("data-current-status");
+            var remarks = button.getAttribute("data-remarks");
+
+            document.getElementById("payment_id").value = paymentId;
+            document.getElementById("flat_number").textContent = flatNumber;
+            document.getElementById("status").value = currentStatus;
+            document.getElementById("remarks").value = remarks;
+        });
+    });
+});
+</script>
+
+<!-- Bootstrap JavaScript (Make Sure It's Included) -->

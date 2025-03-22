@@ -1,0 +1,43 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Make a Payment</h2>
+
+    <form method="POST" class="p-4 border rounded bg-light">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label class="form-label">Select Flat</label>
+            {{ form.flat }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Amount</label>
+            {{ form.amount }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Payment Date</label>
+            {{ form.payment_date }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Payment Mode</label>
+            {{ form.payment_mode }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Transaction id</label>
+            {{ form.transaction_id }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Remarks</label>
+            {{ form.remarks }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Payment</button>
+    </form>
+</div>
+{% endblock %}

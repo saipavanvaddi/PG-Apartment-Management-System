@@ -1,0 +1,277 @@
+{% extends 'tenant/base/tenant_base.html' %}
+{% block content %}
+<!-- Include Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<style>
+    .complaints-container {
+        max-width: 95%;
+        margin: 40px auto;
+        background: linear-gradient(135deg, #ffffff, #f8f9fa);
+        padding: 35px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #e0e7ff;
+        padding-bottom: 12px;
+    }
+    .complaints-header {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1e3a8a;
+        letter-spacing: 0.5px;
+    }
+    .add-btn {
+        background: linear-gradient(90deg, #3b82f6, #1e40af);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    }
+    .add-btn:hover {
+        background: linear-gradient(90deg, #2563eb, #1e3a8a);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+    }
+    .complaint-form {
+        position: relative;
+    }
+    .complaint-form label {
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #1f2937;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.3s ease;
+    }
+    .complaint-form label:hover {
+        color: #3b82f6;
+    }
+    .complaint-form label::before {
+        content: "✦";
+        color: #3b82f6;
+        font-size: 14px;
+        transition: transform 0.3s ease;
+    }
+    .complaint-form label:hover::before {
+        transform: scale(1.2);
+    }
+    .complaint-form textarea,
+    .complaint-form select,
+    .complaint-form input[type="text"],
+    .complaint-form input[type="file"] {
+        width: 100%;
+        padding: 18px;
+        margin-bottom: 30px;
+        border: 2px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 16px;
+        background: #fefefe;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+    .complaint-form textarea:focus,
+    .complaint-form select:focus,
+    .complaint-form input[type="text"]:focus,
+    .complaint-form input[type="file"]:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        background: #fff;
+        outline: none;
+    }
+    .complaint-form textarea {
+        min-height: 150px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+    .complaint-form select {
+        appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%233b82f6" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>') no-repeat right 15px center;
+        background-size: 12px;
+    }
+    .form-submit-btn {
+        background: linear-gradient(90deg, #10b981, #059669);
+        color: #fff;
+        padding: 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 18px;
+        border: none;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    .form-submit-btn:hover {
+        background: linear-gradient(90deg, #059669, #047857);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(16, 185, 129, 0.6);
+    }
+    .form-submit-btn::after {
+        content: "🚀";
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 0.3s ease, right 0.3s ease;
+    }
+    .form-submit-btn:hover::after {
+        opacity: 1;
+        right: 15px;
+    }
+    .complaint-list li {
+        background: #ffffff;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .complaint-list li:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    #other_category, #other_label {
+        display: none;
+    }
+    .modal-header {
+        background: linear-gradient(135deg, #3b82f6, #1e40af);
+        color: #fff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 25px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .modal-header .close {
+        color: #fff;
+        opacity: 1;
+        font-size: 28px;
+        transition: transform 0.3s ease;
+    }
+    .modal-header .close:hover {
+        transform: rotate(180deg);
+    }
+    .modal-body {
+        background: #f9fafb;
+        padding: 35px;
+        border-radius: 0 0 10px 10px;
+        position: relative;
+    }
+    .modal-footer {
+        border-top: none;
+        padding: 20px 35px;
+        background: #f9fafb;
+        border-radius: 0 0 10px 10px;
+        justify-content: flex-start;
+    }
+    .modal-footer .btn-secondary {
+        background: linear-gradient(90deg, #9ca3af, #6b7280);
+        border: none;
+        border-radius: 10px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+    }
+    .modal-footer .btn-secondary:hover {
+        background: linear-gradient(90deg, #6b7280, #4b5563);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(107, 114, 128, 0.5);
+    }
+    .img-thumbnail {
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        transition: transform 0.3s ease;
+    }
+    .img-thumbnail:hover {
+        transform: scale(1.05);
+    }
+    h4.mt-4 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e3a8a;
+        margin-bottom: 20px;
+        border-left: 4px solid #3b82f6;
+        padding-left: 12px;
+    }
+</style>
+
+<div class="complaints-container">
+    <div class="header-row">
+        <div class="complaints-header"> Complaints</div>
+        <button type="button" class="add-btn btn-sm" data-toggle="modal" data-target="#complaintModal">
+            ➕ New Complaint
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="complaintModal" tabindex="-1" role="dialog" aria-labelledby="complaintModalLabel" aria-hidden="true">
+        {% include "tenant/complaint_form.html" %}
+    </div>
+
+    <!-- Complaints History -->
+    <h4 class="mt-4">📌 Complaint History</h4>
+    <ul class="complaint-list list-unstyled">
+        {% for complaint in complaints %}
+            <li>
+                <strong>📝 {{ complaint.category }}: {{ complaint.complaint_text }}</strong><br>
+                {% if complaint.image %}
+                    <br><img src="{{ complaint.image.url }}" alt="Complaint Image" class="img-thumbnail" width="120">
+                {% endif %}
+                <br><small>Status: 
+                    {% if complaint.status == 'Resolved' %}
+                        <span class="text-success">✅ {{ complaint.status }}</span>
+                    {% else %}
+                        <span class="text-danger">🔴 {{ complaint.status }}</span>
+                    {% endif %}
+                </small>
+            </li>
+        {% empty %}
+            <li>No previous complaints. 🟢</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.getElementById('category').addEventListener('change', function() {
+        var otherCategoryField = document.getElementById('other_category');
+        var otherLabel = document.getElementById('other_label');
+        if (this.value === 'Other') {
+            otherCategoryField.style.display = 'block';
+            otherLabel.style.display = 'block';
+            otherCategoryField.required = true;
+        } else {
+            otherCategoryField.style.display = 'none';
+            otherLabel.style.display = 'none';
+            otherCategoryField.required = false;
+        }
+    });
+</script>
+
+{% endblock %}

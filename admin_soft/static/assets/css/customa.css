@@ -1,0 +1,127 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 20px;
+  }
+  
+  /* Title */
+  .page-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+    position: relative;
+    color: #ffffff;
+  }
+  .page-title::after {
+    content: '';
+    width: 50px;
+    height: 3px;
+    background: #ff6b6b;
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  /* Form Wrapper */
+  .form-wrapper {
+    background: #2c2c2c;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  .form-wrapper:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Form Fields */
+  .form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .field-group {
+    display: flex;
+    flex-direction: column;
+  }
+  .field-label {
+    color: #f0f0f0;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  input, select, textarea {
+    background: #3a3a3a;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    background: #454545;
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
+  }
+  .help-text {
+    color: #bbbbbb;
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+  .error-message {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+  
+  /* Submit Button */
+  .submit-btn {
+    background: #ff6b6b;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+  .submit-btn:hover {
+    background: #e55a5a;
+    transform: translateY(-2px);
+  }
+  
+  /* Back Link */
+  .back-link-wrapper {
+    text-align: center;
+    margin-top: 30px;
+  }
+  .back-link {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    border: 2px solid #ff6b6b;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+  .back-link:hover {
+    background: #ff6b6b;
+    color: #ffffff;
+  }
+  

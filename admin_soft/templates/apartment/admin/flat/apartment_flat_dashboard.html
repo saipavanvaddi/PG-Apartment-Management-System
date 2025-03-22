@@ -1,0 +1,51 @@
+{% extends 'apartment/admin/base/apartment_admin_base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2 class="mb-4 text-center">{{ apartment.apartment_name }} Dashboard</h2>
+    
+    <div class="d-flex justify-content-end mb-3">
+      <a href="{% url 'add_flat' %}" class="btn btn-primary">Add Flat</a>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark text-center">
+          <tr>
+            <th>Flat Number</th>
+            <th>Flat Type</th>
+            <th>Purpose</th>
+            <th>Owner</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for flat in flats %}
+            <tr>
+              <td class="text-center">{{ flat.flat_number }}</td>
+              <td class="text-center">{{ flat.flat_type }}</td>
+              <td class="text-center">{{ flat.purpose }}</td>
+              <td class="text-center">{{ flat.owner_name }}</td>
+              <td class="text-center">
+                <a href="{% url 'view_flat' flat.pk %}" class="text-primary me-2">
+                    <i class="fas fa-eye fs-5"></i> 
+                </a>
+                <a href="{% url 'edit_flat' flat.pk %}" class="text-warning me-2">
+                    <i class="fas fa-edit fs-5"></i> 
+                </a>
+                <a href="{% url 'delete_flat' flat.pk %}" class="text-danger">
+                    <i class="fas fa-trash-alt fs-5"></i> 
+                </a>
+            </td>
+            
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center">No flats available.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

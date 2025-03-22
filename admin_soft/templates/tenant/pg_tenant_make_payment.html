@@ -1,0 +1,95 @@
+{% extends 'tenant/base/tenant_base.html' %}
+
+{% block content %}
+<style>
+    .payment-container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .payment-header {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .payment-form {
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    .payment-form label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: #333;
+    }
+
+    .payment-form input,
+    .payment-form select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .btn-submit {
+        display: block;
+        width: 100%;
+        background: #0056b3;
+        color: white;
+        padding: 12px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 18px;
+        transition: 0.3s ease-in-out;
+        border: none;
+    }
+
+    .btn-submit:hover {
+        background: #218838;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="modal-dialog modal-dialog-centered"> <!-- Adjust modal size as needed -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="makePaymentModalLabel">💳 Make Payment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="payment-container">
+            <div class="payment-header">💳 Make Payment</div>
+            <form method="POST" class="payment-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn-submit">✅ Submit Payment</button>
+            </form>
+        </div>
+      </div>
+    
+    </div>
+  </div>
+{% endblock %}

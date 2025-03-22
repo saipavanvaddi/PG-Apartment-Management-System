@@ -1,0 +1,63 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addTenantModalLabel">Add Tenant</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" 
+          style="background-color: #E65100 !important; border-radius: 60%; width: 15px; height: 15px; opacity: 1;">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <label for="name">Name:</label>
+          {{ form.name }}
+      
+          <label for="email">Email:</label>
+          {{ form.email }}
+      
+          <label for="contact_number">Contact Number:</label>
+          {{ form.contact_number }}
+      
+          <label for="assigned_bed">Assigned Bed:</label>
+          {{ form.assigned_bed }}
+      
+          <label for="check_in_date">Check-in Date:</label>
+          {{ form.check_in_date }}
+      
+          <label for="proof_name">ID Proof Type</label>
+          {{ form.proof_name }}
+      
+          <label for="other_proof_name" id="other_proof_label" style="display: none;">Specify Proof Name:</label>
+          {{ form.other_proof_name }}
+      
+          <label for="proof_number">ID Number:</label>
+          {{ form.proof_number }}
+      
+          <label for="proof_file">Upload ID:</label>
+          {{ form.proof_file }}
+      
+          <!-- Add margin-top to increase gap between proof file and button -->
+          <button type="submit" class="btn btn-success" style="margin-top: 20px;">Save Room</button>
+        </form>
+      </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("proof_name").addEventListener("change", function() {
+    var proofName = this.value;
+    var otherProofField = document.getElementById("proof_other");
+    var otherProofLabel = document.getElementById("other_proof_label");
+
+    if (proofName === "Other") {
+        otherProofField.style.display = "block";
+        otherProofLabel.style.display = "block";
+        otherProofField.required = true;
+    } else {
+        otherProofField.style.display = "none";
+        otherProofLabel.style.display = "none";
+        otherProofField.required = false;
+        otherProofField.value = "";  // Clear the field when not needed
+    }
+});
+</script>

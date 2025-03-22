@@ -1,0 +1,42 @@
+{% extends "pg/pg_base.html" %}
+{% load static %}
+
+{% block content %}
+
+<title>
+  PG Rooms
+</title>
+
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Room Dashboard Card -->
+      <div class="card mb-4">
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Room Management</h6>
+          <!-- Add Room Button -->
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+            Add Room
+          </button>
+        </div>
+        <!-- Room List -->
+        <div class="card-body px-0 pt-0 pb-2">
+          {% include "pg/owner_room_list.html" %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Room Modal -->
+  <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+    {% include "pg/owner_room_add.html" %}
+  </div>
+
+  <!-- Edit & Delete Room Modals -->
+  {% for room in rooms %}
+    {% include "pg/owner_room_edit.html" %}
+    {% include "pg/owner_room_delete.html" %}
+  {% endfor %}
+
+</div>
+{% endblock content %}

@@ -1,0 +1,149 @@
+{% extends 'tenant/base/tenant_base.html' %}
+
+{% block content %}
+
+
+<style>
+    .payments-container {
+        max-width: 100%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .payments-header {
+        background: linear-gradient(to right, #007bff, #0056b3);
+        color: white;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .top-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .payment-info {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .amount-box {
+        padding: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+
+    .due-amount {
+        color: #000;
+    }
+
+    .advance-amount {
+        color: black;
+    }
+
+    .btn-success {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .btn-success:hover {
+        background: #218838;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+
+<div class="container mt-4">
+    <div class="payments-container">
+        <div class="payments-header">💰 Payments</div>
+        
+        <!-- First row: Total Due and Make Payment button -->
+        <div class="top-row d-flex justify-content-between align-items-center">
+            <div class="payment-info">
+                Total Due: <span class="amount-box due-amount">₹{{ tenant.due_amount }}</span>
+            </div>
+            <div>
+                <!-- Trigger modal instead of link -->
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#makePaymentModal">
+                  💳 Make Payment
+                </button>
+            </div>
+        </div>
+
+        <!-- Second row: Advance Paid (if available) -->
+        {% if tenant.due_amount == 0 %}
+        <div class="top-row" style="justify-content: flex-start;">
+            <div class="payment-info">
+                Advance Paid: <span class="amount-box advance-amount">₹{{ tenant.advance_amount }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <h3 class="mt-4">📜 Payment History</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payment_history %}
+                    <tr>
+                        <td>₹{{ payment.amount }}</td>
+                        <td>{{ payment.get_payment_method_display }}</td>
+                        <td>{{ payment.get_status_display }}</td>
+                        <td>{{ payment.transaction_id }}</td>
+                        <td>{{ payment.payment_date }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5">No payment records found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal for Make Payment -->
+<div class="modal fade" id="makePaymentModal" tabindex="-1" aria-labelledby="makePaymentModalLabel" aria-hidden="true">
+  {% include 'tenant/pg_tenant_make_payment.html' %}
+</div>
+
+
+{% endblock %}

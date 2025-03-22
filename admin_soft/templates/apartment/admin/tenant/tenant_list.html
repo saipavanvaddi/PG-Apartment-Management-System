@@ -1,0 +1,106 @@
+{% extends "apartment/admin/base/apartment_admin_base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Tenant List</h2>
+    {% if tenants %}
+        <table class="tenant-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                    <th>Assigned Flat</th>
+                    <th>Proof File</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tenant in tenants %}
+                    <tr>
+                        <td>{{ tenant.name }}</td>
+                        <td>{{ tenant.email }}</td>
+                        <td>{{ tenant.contact_number }}</td>
+                        <td>{{ tenant.assigned_owner.flat_number }}</td>
+                        <td>
+                            {% if tenant.proof_file_url %}
+                                <a href="{{ tenant.proof_file_url }}" class="btn-view" target="_blank">View Proof</a>
+                            {% else %}
+                                <span class="no-proof">No Proof Uploaded</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-data">No tenants found.</p>
+    {% endif %}
+</div>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .tenant-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .tenant-table th, .tenant-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+    .tenant-table th {
+        background: #007bff;
+        color: white;
+        font-weight: bold;
+    }
+    .tenant-table tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+    .tenant-table tr:hover {
+        background: #e9ecef;
+    }
+    .btn-view {
+        display: inline-block;
+        padding: 6px 12px;
+        background: #28a745;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .btn-view:hover {
+        background: #218838;
+    }
+    .no-proof {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .no-data {
+        text-align: center;
+        color: #777;
+        font-size: 16px;
+    }
+</style>
+{% endblock %}

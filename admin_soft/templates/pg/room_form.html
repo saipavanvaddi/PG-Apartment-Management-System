@@ -1,0 +1,38 @@
+{% extends 'pg/pg_base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="text-center">Add / Edit Room</h3>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_room_number" class="form-label">Room Number</label>
+                    {{ form.room_number }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_number_of_beds" class="form-label">Number of Beds</label>
+                    {{ form.number_of_beds }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_rent_amount" class="form-label">Rent Amount</label>
+                    {{ form.rent_amount }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_status" class="form-label">Status</label>
+                    {{ form.status }}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 rounded-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-primary">🏠 Owner Profile</h2>
+            <a href="{% url 'flat_edit_owner_profile' %}" class="btn btn-outline-primary fw-bold">✏️ Edit Profile</a>
+        </div>
+        <hr>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <tbody>
+                    <tr>
+                        <th>🏢 Apartment</th>
+                        <td>{{ owner.apartment_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>🔢 Flat Number</th>
+                        <td>{{ owner.flat_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>🏠 Flat Type</th>
+                        <td>{{ owner.get_flat_type_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>📞 Contact Number</th>
+                        <td>{{ owner.owner_contact }}</td>
+                    </tr>
+                    <tr>
+                        <th>📧 Email</th>
+                        <td>{{ owner.owner_email }}</td>
+                    </tr>
+                    <tr>
+                        <th>📏 Flat Size</th>
+                        <td>{{ owner.flat_size }}</td>
+                    </tr>
+                    <tr>
+                        <th>📌 Status</th>
+                        <td>
+                            <span class="badge {% if owner.status == 'Occupied' %}bg-success{% elif owner.status == 'Available' %}bg-primary{% else %}bg-warning{% endif %}">
+                                {{ owner.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>🎯 Purpose</th>
+                        <td>{{ owner.get_purpose_display }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styling -->
+<style>
+    .card {
+        max-width: 800px;
+        margin: auto;
+        border-radius: 15px;
+        background: #ffffff;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .table th {
+        width: 30%;
+        background-color: #f1f1f1;
+        font-weight: bold;
+    }
+    .table td {
+        font-size: 16px;
+    }
+    .btn-outline-primary {
+        padding: 8px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}

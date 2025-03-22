@@ -1,0 +1,102 @@
+{% extends 'apartment/admin/base/apartment_admin_base.html' %}
+
+{% block content %}
+<style>
+    .icon-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px; /* Adjust size as needed */
+        height: 40px;
+        text-decoration: none;
+        font-size: 22px;
+        color: #ff9800; /* Change color as needed */
+        transition: color 0.3s;
+    }
+
+    .icon-btn:hover {
+        color: #e65100; /* Darker shade on hover */
+    }
+</style>
+<div class="container mt-4">
+    <h2 class="mb-3">All Complaints</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" class="mb-3">
+        <div class="row g-2">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search by Subject"
+                    value="{{ request.GET.search }}">
+            </div>
+
+            <div class="col-md-3">
+                <select name="status" class="form-control">
+                    <option value="">Filter by Status</option>
+                    {% for status_value, status_label in status_choices %}
+                    <option value="{{ status_value }}" {% if request.GET.status == status_value %}selected{% endif %}>
+                        {{ status_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select name="owner" class="form-control">
+                    <option value="">Filter by Owner</option>
+                    {% for owner in owners %}
+                    <option value="{{ owner.id }}" {% if request.GET.owner == owner.id|stringformat:"s" %}selected{% endif %}>
+                        {{ owner.owner_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Complaints Table -->
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Owner</th>
+                <th>Subject</th>
+                <th class="text-center">Status & Actions</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complaint in complaints %}
+            <tr>
+                <td>{{ complaint.owner.owner_name }}</td>
+                <td>{{ complaint.subject }}</td>
+                <td class="text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-3">
+                        <!-- Status Badge -->
+                        {% if complaint.status == 'solved' %}
+                            <span class="badge bg-success px-3 py-2">Solved</span>
+                        {% elif complaint.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                        {% else %}
+                            <span class="badge bg-secondary px-3 py-2">Unknown</span>
+                        {% endif %}
+
+                        <!-- Comment Icon -->
+                        <a href="{% url 'apartment_admin_complaint_reply' complaint.id %}" class="text-primary me-3">
+                            <i class="fas fa-comments fa-lg"></i>
+                        </a>         
+                    </div>
+                </td> 
+                <td>{{ complaint.created_at|date:"d M Y, H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No complaints available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

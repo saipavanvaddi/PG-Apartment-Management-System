@@ -1,0 +1,132 @@
+{% extends 'pg/pg_base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">💳 All Payments</h2>
+
+    <!-- Search and Filter Bar -->
+    <div class="d-flex justify-content-between mb-3">
+        <input type="text" id="searchBox" class="form-control w-50" placeholder="🔍 Search payments...">
+
+        <select id="statusFilter" class="form-select w-25">
+            <option value="">🔄 All</option>
+            <option value="Pending">🟠 Pending</option>
+            <option value="Completed">✅ Completed</option>
+            <option value="Failed">❌ Failed</option>
+        </select>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Tenant</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="paymentTable">
+            {% for payment in payments %}
+                <tr data-status="{{ payment.status }}">
+                    <td>{{ payment.tenant.name }}</td>
+                    <td>₹{{ payment.amount }}</td>
+                    <td>{{ payment.payment_method }}</td>
+                    <td>
+                        {% if payment.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark">🟠 Pending</span>
+                        {% elif payment.status == 'Completed' %}
+                            <span class="badge bg-success">✅ Completed</span>
+                        {% elif payment.status == 'Failed' %}
+                            <span class="badge bg-danger">❌ Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if payment.status == 'Pending' %}
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal{{ payment.id }}">
+                                Mark as Completed
+                            </button>
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#failPaymentModal{{ payment.id }}">
+                                Mark as Failed
+                            </button>
+                        {% elif payment.status == 'Failed' %}
+                            <span class="text-danger fw-bold">❌ Payment Failed</span>
+                        {% else %}
+                            <span class="text-success fw-bold">✔ Payment Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- Confirmation Modal for Payment Completion -->
+                <div class="modal fade" id="confirmPaymentModal{{ payment.id }}" tabindex="-1" aria-labelledby="confirmPaymentLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">Confirm Payment Completion</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to mark this payment as <strong>Completed</strong>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a href="{% url 'mark_payment_completed' payment.id %}" class="btn btn-success">Yes, Mark Completed</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirmation Modal for Payment Failure -->
+                <div class="modal fade" id="failPaymentModal{{ payment.id }}" tabindex="-1" aria-labelledby="failPaymentLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title">Confirm Payment Failure</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to mark this payment as <strong>Failed</strong>?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <a href="{% url 'mark_payment_failed' payment.id %}" class="btn btn-danger">Yes, Mark as Failed</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- JavaScript for Filtering & Searching -->
+<script>
+    document.getElementById('searchBox').addEventListener('keyup', function() {
+        let searchText = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#paymentTable tr");
+        rows.forEach(row => {
+            let tenantName = row.cells[0].textContent.toLowerCase();
+            let paymentMethod = row.cells[2].textContent.toLowerCase();
+            if (tenantName.includes(searchText) || paymentMethod.includes(searchText)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+
+    document.getElementById('statusFilter').addEventListener('change', function() {
+        let filterValue = this.value;
+        let rows = document.querySelectorAll("#paymentTable tr");
+        rows.forEach(row => {
+            let status = row.dataset.status;
+            if (filterValue === "" || status === filterValue) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    });
+</script>
+{% endblock %}

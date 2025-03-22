@@ -1,0 +1,31 @@
+{% extends "apartment/owner/base/apartment_owner_base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2>✏️ Edit Profile</h2>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.owner_name.label_tag }}
+                {{ form.owner_name }}
+            </div>
+            <div class="mb-3">
+                {{ form.owner_contact.label_tag }}
+                {{ form.owner_contact }}
+            </div>
+            <div class="mb-3">
+                {{ form.owner_email.label_tag }}
+                {{ form.owner_email }}
+            </div>
+            <div class="mb-3">
+                {{ form.flat_size.label_tag }}
+                {{ form.flat_size }}
+            </div>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="{% url 'flat_owner_profile' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
